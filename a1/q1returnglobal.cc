@@ -9,29 +9,34 @@ struct Er1 { short int code; };
 struct Er2 { int code; };
 struct Er3 { long int code; };
 
-#define ERROR1 -1
-#define ERROR2 -2
-#define ERROR3 -3
+const int ERROR_1 = -1;                                 // constant global errors
+const int ERROR_2 = -2;
+const int ERROR_3 = -3;
+const int NO_ERROR = 0;
 
 int eperiod = 10000;                                    // error period
-int flag = 0;                                           // global status flags
+int eflag = NO_ERROR;                                   // global error status flag
+int ecode = NO_ERROR;                                   // global error code
 
 double rtn1( double i ) {
     if ( rand() % eperiod == 0 ) {
-        flag = ERROR1;
+        eflag = ERROR_1;
+        ecode = (short int)rand();
     }
     return i;
 }
 double rtn2( double i  ) {
     if ( rand() % eperiod == 0 ) {
-        flag = ERROR2;
+        eflag = ERROR_2;
+        ecode = rand();
         return i;
     }
     return rtn1( i ) + i;
 }
 double rtn3( double i  ) {
     if ( rand() % eperiod == 0 ) {
-        flag = ERROR3;
+        eflag = ERROR_3;
+        ecode = rand();
         return i;
     }
     return rtn2( i ) + i;
@@ -61,20 +66,17 @@ int main( int argc, char * argv[] ) {
     double rv = 0.0;
     int ev1 = 0, ev2 = 0, ev3 = 0;
     int rc = 0, ec1 = 0, ec2 = 0, ec3 = 0;
+    int tmp = 0;
 
     for ( int i = 0; i < times; i += 1 ) {
-        rv += rtn3( i ); rc += 1; 
-        // analyse error
-
-        if (flag == ERROR1) {
-            ev1 += (short int)rand(); ec1 += 1;
-        }
-        if (flag == ERROR2) {
-            ev2 += rand(); ec2 += 1;
-        }
-        if (flag == ERROR3) {
-            ev3 += rand(); ec3 += 1;
-        }
+        tmp = rtn3( i );
+        switch ( eflag ) {
+            case ERROR_1: ev1 += ecode; ec1 += 1; break;
+            case ERROR_2: ev2 += ecode; ec2 += 1; break;
+            case ERROR_3: ev3 += ecode; ec3 += 1; break;
+            default: rv += tmp; rc += 1;
+        } //switch
+        eflag = NO_ERROR;
     } // for
     cout << "normal result " << rv << " exception results " << ev1 << ' ' << ev2 << ' ' << ev3 << endl;
     cout << "calls "  << rc << " exceptions " << ec1 << ' ' << ec2 << ' ' << ec3 << endl;
