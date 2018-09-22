@@ -66,17 +66,14 @@ int main( int argc, char * argv[] ) {
         rv += rtn3( i ); rc += 1; 
         // analyse error
 
-        if (FLAG1) {
-            ev1 += ev.code;
-            ec1 += 1;
+        if (flag == ERROR1) {
+            ev1 += (short int)rand(); ec1 += 1;
         }
-        if (FLAG2) {
-            ev2 += ev.code;
-            ec2 += 1;
+        if (flag == ERROR2) {
+            ev2 += rand(); ec2 += 1;
         }
-        if (FLAG3) {
-            ev3 += ev.code;
-            ec3 += 1;
+        if (flag == ERROR3) {
+            ev3 += rand(); ec3 += 1;
         }
     } // for
     cout << "normal result " << rv << " exception results " << ev1 << ' ' << ev2 << ' ' << ev3 << endl;
