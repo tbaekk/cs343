@@ -1,0 +1,24 @@
+b)
+
+    i)
+    The output is not the same between the original and transformed program because the
+    original program will call the destructor on struct T(s) that have been created when
+    an exception occurs. On the other hand, the transformed program will not call the destructor.
+    Thus, the output difference is that "~" will not be printed for the transformed program.
+
+    ii)
+    q2throwcatch: 12.97u
+    longjmp     : 2.94u
+
+    q2throwcatch: 15.31u (optimized)
+    longjmp     : 2.78u (optimized)
+
+    iii)
+    longjmp: 10.03u smaller
+        - It has the fastest performance because it does not have to handle throw/catch statements
+        and throw/catch is expensive in runtime.
+
+    iv)
+    longjmp: 12.53u smaller
+        - The original program became slower but transformed program became a little faster (same code
+        but compiler optimized).
