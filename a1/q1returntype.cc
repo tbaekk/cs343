@@ -11,7 +11,7 @@ struct Er3 { long int code; };
 
 int eperiod = 10000;                                    // error period
 
-variant<double,Er1,Er2,Er3> operator+(variant<double,Er1,Er2,Er3> v, double i) {
+variant<double,Er1,Er2,Er3> operator+( variant<double,Er1,Er2,Er3> v, double i ) {
     return holds_alternative<double>(v) ? get<double>(v) + i : v;
 }
 
@@ -69,11 +69,12 @@ int main( int argc, char * argv[] ) {
 
     for ( int i = 0; i < times; i += 1 ) {
         ret = rtn3( i );
-        if (holds_alternative<double>(ret)) {
+        // analyse error
+        if ( holds_alternative<double>(ret) ) {
             rv += get<double>(ret); rc += 1; 
-        } else if (holds_alternative<Er1>(ret)) {  // analyse error
+        } else if ( holds_alternative<Er1>(ret) ) {
             ev1 += get<Er1>(ret).code; ec1 += 1;
-        } else if (holds_alternative<Er2>(ret)) {
+        } else if ( holds_alternative<Er2>(ret) ) {
             ev2 += get<Er2>(ret).code; ec2 += 1;
         } else {
             ev3 += get<Er3>(ret).code; ec3 += 1;
