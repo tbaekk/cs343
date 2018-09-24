@@ -22,7 +22,7 @@ variant<double,Er1,Er2,Er3> rtn1( double i ) {
     } // if
     return result;
 }
-variant<double,Er1,Er2,Er3> rtn2( double i  ) {
+variant<double,Er1,Er2,Er3> rtn2( double i ) {
     variant<double,Er1,Er2,Er3> result = i;
     if ( rand() % eperiod == 0 ){
         result = Er2{ rand() };
@@ -31,7 +31,7 @@ variant<double,Er1,Er2,Er3> rtn2( double i  ) {
     } // if
     return result + i;
 }
-variant<double,Er1,Er2,Er3> rtn3( double i  ) {
+variant<double,Er1,Er2,Er3> rtn3( double i ) {
     variant<double,Er1,Er2,Er3> result = i;
     if ( rand() % eperiod == 0 ) {
         result = Er3{ rand() };

@@ -23,8 +23,7 @@ int eperiod = 10000;                                    // error period
 struct ErUnion rtn1( double i ) {
     struct ErUnion u;
     if ( rand() % eperiod == 0 ) {
-        struct Er1 er1 = { (short int)rand() };
-        u.er1 = er1;
+        u.er1 = (struct Er1){ (short int)rand() };
         u.tag = ER1_ACTIVE;
     } else {
         u.rv = i;
@@ -35,8 +34,7 @@ struct ErUnion rtn1( double i ) {
 struct ErUnion rtn2( double i ) {
     struct ErUnion u;
     if ( rand() % eperiod == 0 ) {
-        struct Er2 er2 = { rand() };
-        u.er2 = er2;
+        u.er2 = (struct Er2){ rand() };
         u.tag = ER2_ACTIVE;
     } else {
         u = rtn1( i );
@@ -49,8 +47,7 @@ struct ErUnion rtn2( double i ) {
 struct ErUnion rtn3( double i ) {
     struct ErUnion u;
     if ( rand() % eperiod == 0 ) {
-        struct Er3 er3 = { rand() };
-        u.er3 = er3;
+        u.er3 = (struct Er3){ rand() };
         u.tag = ER3_ACTIVE;
     } else {
         u = rtn2( i );

@@ -25,7 +25,7 @@ double rtn1( double i ) {
     }
     return i;
 }
-double rtn2( double i  ) {
+double rtn2( double i ) {
     if ( rand() % eperiod == 0 ) {
         eflag = ERROR_2;
         ecode = rand();
@@ -33,7 +33,7 @@ double rtn2( double i  ) {
     }
     return rtn1( i ) + i;
 }
-double rtn3( double i  ) {
+double rtn3( double i ) {
     if ( rand() % eperiod == 0 ) {
         eflag = ERROR_3;
         ecode = rand();

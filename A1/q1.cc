@@ -14,11 +14,11 @@ double rtn1( double i ) {
     if ( rand() % eperiod == 0 ) throw Er1{ (short int)rand() };
     return i;
 }
-double rtn2( double i  ) {
+double rtn2( double i ) {
     if ( rand() % eperiod == 0 ) throw Er2{ rand() };
     return rtn1( i ) + i;
 }
-double rtn3( double i  ) {
+double rtn3( double i ) {
     if ( rand() % eperiod == 0 ) throw Er3{ rand() };
     return rtn2( i ) + i;
 }

@@ -1,0 +1,82 @@
+1
+
+b)
+
+    i)
+    q1          :   3.91u 0.00s 0:03.91
+    returnglobal:   3.40u 0.00s 0:03.40
+    returntype  :   32.35u 0.00s 0:35.94
+    returntypec :   4.19u 0.00s 0:04.19
+
+    q1          :   3.46u 0.00s 0:03.46 (optimized)
+    returnglobal:   3.42u 0.00s 0:03.44 (optimized)
+    returntype  :   4.42u 0.00s 0:04.43 (optimized)
+    returntypec :   3.40u 0.00s 0:03.40 (optimized)
+
+    ii)
+    returnglobal:   0.51u smaller
+        - It has the fastest performance because it does not have to handle arguments 
+        or throw/catch statements to handle errors during unwinding the stack.
+    returntype  :   28.44u larger
+        - It has the slowest performance because variant itself has a lot of inner
+        operations and also when passed as an argument it slows down the process.
+    returntypec :   0.28u slower
+        - I think that it larger a bit slower than the original program because I have to
+        use resources to manage the Union object to keep up-to date.
+
+    iii)
+    returnglobal:   0.04u smaller 
+    returntype  :   0.96u larger
+    returntypec :   0.06u smaller
+
+c)
+
+    i)
+    (eperiod = 1000)
+    q1          :   4.26u 0.00s 0:04.26
+    returnglobal:   3.24u 0.00s 0:03.24
+    returntype  :   4.55u 0.00s 0:04.55
+    returntypec :   3.82u 0.00s 0:03.83
+    
+    (eperiod = 100)
+    q1          :   11.15u 0.00s 0:11.15
+    returnglobal:   3.24u 0.00s 0:03.24
+    returntype  :   4.87u 0.00s 0:04.87
+    returntypec :   4.04u 0.00s 0:04.04
+
+    (eperiod = 50)
+    q1          :   18.85u 0.00s 0:18.85
+    returnglobal:   3.34u 0.00s 0:03.34
+    returntype  :   4.72u 0.00s 0:04.72
+    returntypec :   4.11u 0.00s 0:04.11
+
+    ii)
+    (eperiod = 1000)
+    returnglobal:   1.02u smaller
+    returntype  :   0.29u larger
+    returntypec :   0.44u smaller
+
+    (eperiod = 100)
+    returnglobal:   7.91 smaller
+    returntype  :   6.28 smaller 
+    returntypec :   7.11 smaller
+
+    (eperiod = 50)
+    returnglobal:   15.51 smaller
+    returntype  :   14.13 smaller
+    returntypec :   14.74 smaller
+
+    --- Reasoning ---
+    As the error period decreases, the original program performance becomes slower because more errors occurr, therefore
+    there are more exceptions to be handled in the original program. On the other hand, transformed programs are not effected
+    since they don't handle with try/catch errors.
+
+    returnglobal
+        - It has the fastest performance since it only has to changed the single global flag variable so the performance 
+        is not affected although more errors are produced. 
+    returntype
+        - It only has to return appropriatly updated variant. Similar to other transformed programs, it does not have to
+        handle with errors itself.
+    returntypec
+        - It has the second fastest performance since it uses enum as a flag to update whether errors occurred or not
+        and initialize errors accordingly.
