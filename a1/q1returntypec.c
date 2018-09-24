@@ -96,6 +96,6 @@ Main:
             ev3 += ret.er3.code; ec3 += 1;
         } // if
     } // for
-    printf("normal result %.5e exception results %d %d %d\n", rv, ev1, ev2, ev3);
+    printf("normal result %.5g exception results %d %d %d\n", rv, ev1, ev2, ev3);
     printf("calls %d exceptions %d %d %d\n", rc, ec1, ec2, ec3);
 }

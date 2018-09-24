@@ -1,15 +1,15 @@
 b)
 
     i)
-    q1          :   3.91u 0.00s 0:03.91
-    returnglobal:   3.40u 0.00s 0:03.40
-    returntype  :   32.35u 0.00s 0:35.94
-    returntypec :   4.19u 0.00s 0:04.19
+    q1exception :   3.91u
+    returnglobal:   3.40u
+    returntype  :   32.35u
+    returntypec :   4.19u
 
-    q1          :   3.46u 0.00s 0:03.46 (optimized)
-    returnglobal:   3.42u 0.00s 0:03.44 (optimized)
-    returntype  :   4.42u 0.00s 0:04.43 (optimized)
-    returntypec :   3.40u 0.00s 0:03.40 (optimized)
+    q1exception :   3.46u (optimized)
+    returnglobal:   3.42u (optimized)
+    returntype  :   4.42u (optimized)
+    returntypec :   3.40u (optimized)
 
     ii)
     returnglobal:   0.51u smaller
@@ -31,22 +31,22 @@ c)
 
     i)
     (eperiod = 1000)
-    q1          :   4.26u 0.00s 0:04.26
-    returnglobal:   3.24u 0.00s 0:03.24
-    returntype  :   4.55u 0.00s 0:04.55
-    returntypec :   3.82u 0.00s 0:03.83
+    q1exception :   4.26u
+    returnglobal:   3.24u
+    returntype  :   4.55u
+    returntypec :   3.82u
     
     (eperiod = 100)
-    q1          :   11.15u 0.00s 0:11.15
-    returnglobal:   3.24u 0.00s 0:03.24
-    returntype  :   4.87u 0.00s 0:04.87
-    returntypec :   4.04u 0.00s 0:04.04
+    q1exception :   11.15u
+    returnglobal:   3.24u
+    returntype  :   4.87u
+    returntypec :   4.04u
 
     (eperiod = 50)
-    q1          :   18.85u 0.00s 0:18.85
-    returnglobal:   3.34u 0.00s 0:03.34
-    returntype  :   4.72u 0.00s 0:04.72
-    returntypec :   4.11u 0.00s 0:04.11
+    q1exception :   18.85u
+    returnglobal:   3.34u
+    returntype  :   4.72u
+    returntypec :   4.11u
 
     ii)
     (eperiod = 1000)
