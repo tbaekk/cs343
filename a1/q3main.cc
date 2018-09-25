@@ -4,7 +4,7 @@
 using namespace std;
 #include <cstdlib>					                    // exit
 
-#include "q3parser.h"
+#include "q3listing.h"
 
 void usage( char * argv[] ) {
     cerr << "Usage: " << argv[0]
@@ -29,10 +29,29 @@ int main( int argc, char * argv[] ) {
     
     string line;
     while ( getline(*infile, line) ) {
-        Parser parser;
+        Listing listing;
         if ( line.length() == 0 ) { // blank line
             cout << "'' : Warning! Blank line." << endl; continue; 
         }
-        parser.run( line );
+        string output = "'" + line + "' : '";
+        line = line + "\n";
+
+        for (int i = 0; i < line.length(); i++) {
+            try {
+                if (i != (line.length() - 1)) {
+                    output += line.at(i);
+                } // if
+                _Enable{ listing.next( line.at(i) ); }
+            } _CatchResume( Listing::Match ) {
+                cout << output + "' yes" << endl;
+            } catch ( uBaseCoroutine::UnhandledException ) {
+                output += "' no";
+                if ( i < (line.length() - 2) ) {
+                    output += ", extraneous characters '" + line.substr(i + 1, (line.length() - 1) - i - 1) + "'";
+                } // if
+                cout << output << endl;
+                break;
+            } // try
+        }
     }
 }
