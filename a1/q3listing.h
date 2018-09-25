@@ -1,29 +1,24 @@
 #ifndef _Q3LISTING_H_
 #define _Q3LISTING_H_
 
-enum parseState {
-  start,
+enum States {
   fileinfo,
-  rwx1r,
-  rwx1w,
-  rwx1x,
-  rwx2r,
-  rwx2w,
-  rwx2x,
-  rwx3r,
-  rwx3w,
-  rwx3x,
-  whitespacenum,
-  zero,
-  sizenum,
-  whitespacename,
+  readable,
+  writable,
+  executable,
+  whitespace,
+  prevnumsize,
+  numsize,
+  prevfilename,
   filename,
   kind
 };
 
 _Coroutine Listing {
         char ch; // character passed by cocaller
-        parseState state;
+        int execCounter; // executable counter to check for last rwx
+        States prevState;
+        States curState;
         void main(); // coroutine main
     public:
         _Event Match {}; // last character match
