@@ -1,5 +1,18 @@
 #include "q3listing.h"
 
+/*********** main ***********
+    Purpose: A character is checked to see if it's a valid character according
+        to the given grammer from the assignment,
+        if it is given a invalid character it throws error,
+        if it is giveen a valid character the coroutine suspends and resumes until eol.
+
+
+    Returns: None.
+
+
+    Errors: Invalid character. Coroutine is terminated.
+************************************/
+
 void Listing::main() {
     if (ch == 'd' 
         || ch == 'D' 
@@ -79,6 +92,19 @@ void Listing::main() {
         _Throw Error();
     } // if
 }
+
+
+/*********** main ***********
+    Purpose: A character is consumed and assigned to private member,
+        if the coroutine main suspends it resumes the method when the
+        method is called again.
+
+
+    Returns: None.
+
+
+    Errors: No error.
+************************************/
 
 void Listing::next( char c ) {
     ch = c; // communicate input

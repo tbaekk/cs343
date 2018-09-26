@@ -49,9 +49,10 @@ int main( int argc, char * argv[] ) {
                 if ( i < (line.length() - 2) ) {
                     output += ", extraneous characters '" + line.substr(i + 1, (line.length() - 1) - i - 1) + "'";
                 } // if
-                cout << output << endl;
+                cout << output << endl; // print remaining lines
                 break;
             } // try
         } // for
     }
+    delete infile;
 }
