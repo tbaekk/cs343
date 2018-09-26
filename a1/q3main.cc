@@ -32,7 +32,7 @@ int main( int argc, char * argv[] ) {
         Listing listing;
         if ( line.length() == 0 ) { // blank line
             cout << "'' : Warning! Blank line." << endl; continue; 
-        }
+        } // if 
         string output = "'" + line + "' : '";
         line = line + "\n";
 
@@ -52,6 +52,6 @@ int main( int argc, char * argv[] ) {
                 cout << output << endl;
                 break;
             } // try
-        }
+        } // for
     }
 }
