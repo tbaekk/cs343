@@ -1,0 +1,181 @@
+/*
+ * Test 1
+ *
+ * Purpose: Wrong usage of command line arguments
+ */
+
+Command Line Argument
+    ./listing test_general test_valid_fileinfo
+
+Input
+
+Output
+    Usage: ./listing [ infile ]
+
+/*
+ * Test 2
+ *
+ * Purpose: Valid/invalid characters for fileinfo token
+ */
+
+Input
+    -rw------- 600 Makefile
+    drw------- 600 Makefile
+    Drw------- 600 Makefile
+    brw------- 600 Makefile
+    crw------- 600 Makefile
+    prw------- 600 Makefile
+    srw------- 600 Makefile
+    Xrw------- 600 Makefile
+
+Output
+    '-rw------- 600 Makefile' : '-rw------- 600 Makefile' yes
+    'drw------- 600 Makefile' : 'drw------- 600 Makefile' yes
+    'Drw------- 600 Makefile' : 'Drw------- 600 Makefile' yes
+    'brw------- 600 Makefile' : 'brw------- 600 Makefile' yes
+    'crw------- 600 Makefile' : 'crw------- 600 Makefile' yes
+    'prw------- 600 Makefile' : 'prw------- 600 Makefile' yes
+    'srw------- 600 Makefile' : 'srw------- 600 Makefile' yes
+    'Xrw------- 600 Makefile' : 'X' no, extraneous characters 'rw-------  600 Makefile'
+
+/*
+ * Test 3
+ *
+ * Purpose: Valid/invalid characters for rwx token
+ */
+
+Input
+    -rwx---r-x 600 Makefile
+    drw-----w- 600 Makefile
+    Drw---xr-- 600 Makefile
+    -rw-rw---- 600 Makefile
+    crw------- 600 Makefile
+    -rwx--x-sd 600 Makefile
+
+Output
+    '-rwx---r-x 600 Makefile' : '-rwx---r-x 600 Makefile' yes
+    'drw-----w- 600 Makefile' : 'drw-----w- 600 Makefile' yes
+    'Drw---xr-- 600 Makefile' : 'Drw---xr-- 600 Makefile' yes
+    '-rw-rw---- 600 Makefile' : '-rw-rw---- 600 Makefile' yes
+    'crw------- 600 Makefile' : 'crw------- 600 Makefile' yes
+    '-rwx--x-sd 600 Makefile' : '-rwx--x-s' no, extraneous characters 'd 600 Makefile'
+
+/*
+ * Test 4
+ *
+ * Purpose: Valid/invalid characters for whitespace token before size token
+ */
+
+Input
+    -rw------- 1992 listing.h
+    drw-------          2048 listing.cc
+    -rw-------1992 listing.h
+    -rw-------      1992 main.cc
+    crw-------  c   88 pawn.h
+    drw-----w- 1992 Makefile
+    -rwx--x--- 1992 listing.h
+
+Output
+    '-rw------- 1992 listing.h' : '-rw------- 1992 listing.h' yes
+    'drw-------          2048 listing.cc' : 'drw-------          2048 listing.cc' yes
+    '-rw-------1992 listing.h' : '-rw-------1' no, extraneous characters '992 listing.h'
+    '-rw-------      1992 main.cc' : '-rw-------      1992 main.cc' yes
+    'crw-------  c   88 pawn.h' : 'crw-------  c ' no, extraneous characters '  88 pawn.h'
+    'drw-----w- 1992 Makefile' : 'drw-----w- 1992 Makefile' yes
+    '-rwx--x--- 1992 listing.h' : '-rwx--x--- 1992 listing.h' yes
+
+/*
+ * Test 5
+ *
+ * Purpose: Valid/invalid characters for size token
+ */
+
+Input
+    -rw------- 1992 listing.h
+    drw------- 2048 listing.cc
+    -rw------- 051 listing.h
+    -rw------- 0 main.cc
+    crw------- 88 pawn.h
+    drw-----w- 1001 Makefile
+    -rwx--x--- 1992 listing.h
+
+Output
+    '-rw------- 1992 listing.h' : '-rw------- 1992 listing.h' yes
+    'drw------- 2048 listing.cc' : 'drw------- 2048 listing.cc' yes
+    '-rw------- 051 listing.h' : '-rw------- 05' no, extraneous characters '1 listing.h'
+    '-rw------- 0 main.cc' : '-rw------- 0 main.cc' yes
+    'crw------- 88 pawn.h' : 'crw------- 88 pawn.h' yes
+    'drw-----w- 1001 Makefile' : 'drw-----w- 1001 Makefile' yes
+    '-rwx--x--- 1992 listing.h' : '-rwx--x--- 1992 listing.h' yes
+
+/*
+ * Test 6
+ *
+ * Purpose: Valid/invalid characters for whitespace token before filename token
+ */
+
+Input
+    -rw------- 1992 listing.h
+    drw------- 2048 listing.cc
+    -rw------- 0main.cc
+    crw------- 88 pawn.h
+    drw-----w- 1001Makefile
+    -rwx--x--- 1992 listing.h
+
+Output
+    '-rw------- 1992 listing.h' : '-rw------- 1992 listing.h' yes
+    'drw------- 2048 listing.cc' : 'drw------- 2048 listing.cc' yes
+    '-rw------- 0main.cc' : '-rw------- 0m' no, extraneous characters 'ain.cc'
+    'crw------- 88 pawn.h' : 'crw------- 88 pawn.h' yes
+    'drw-----w- 1001Makefile' : 'drw-----w- 1001M' no, extraneous characters 'akefile'
+    '-rwx--x--- 1992 listing.h' : '-rwx--x--- 1992 listing.h' yes
+
+/*
+ * Test 7
+ *
+ * Purpose: Valid/invalid characters for filename token
+ */
+
+Input
+    ----------  592 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+    -rw------- 1992 listing.h
+    drw------- 2048 .listing.cc
+    -rw------- 0 !main.cc
+    crw------- 88 pawn.h
+    drw-----w- 1001 3Makefile
+    -rwx--x--- 1992 _listing.h
+    -rw-r--rw- 1001 a
+    drw-----w- 600 Mak?file
+
+Output
+    '----------  592 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' : '----------  592 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' yes
+    '-rw------- 1992 listing.h' : '-rw------- 1992 listing.h' yes
+    'drw------- 2048 .listing.cc' : 'drw------- 2048 .listing.cc' yes
+    '-rw------- 0 !main.cc' : '-rw------- 0 !' no, extraneous characters 'main.cc'
+    'crw------- 88 pawn.h' : 'crw------- 88 pawn.h' yes
+    'drw-----w- 1001 3Makefile' : 'drw-----w- 1001 3' no, extraneous characters 'Makefile'
+    '-rwx--x--- 1992 _listing.h' : '-rwx--x--- 1992 _listing.h' yes
+    '-rw-r--rw- 1001 a' : '-rw-r--rw- 1001 a' yes
+    'drw-----w- 600 Mak?file' : 'drw-----w- 600 Mak?' no, extraneous characters 'file'
+
+/*
+ * Test 8
+ *
+ * Purpose: Valid/invalid characters for kind token
+ */
+
+Input
+    -rw------- 1992 listing*
+    drw------- 2048 listing.cc
+    -rw------- 592 q3/
+    -rw------- 592 q3.*
+    drw------- 2048 listing.cc\
+    ----------  592 Makefile**
+
+Output
+    '-rw------- 1992 listing*' : '-rw------- 1992 listing*' yes
+    'drw------- 2048 listing.cc' : 'drw------- 2048 listing.cc' yes
+    '-rw------- 592 q3/' : '-rw------- 592 q3/' yes
+    '-rw------- 592 q3.*' : '-rw------- 592 q3.*' yes
+    'drw------- 2048 listing.cc\' : 'drw------- 2048 listing.cc\' no
+    '----------  592 Makefile**' : '----------  592 Makefile**' no

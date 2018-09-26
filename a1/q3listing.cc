@@ -47,9 +47,13 @@ void Listing::main() {
         } // if
     } // for
 
-    while ( ch == ' ' || ch == '\t' ) { // whitespace
-        suspend();
-    } // while
+    if ( ch == ' ' || ch == '\t' ) {
+        while ( ch == ' ' || ch == '\t' ) { // whitespace
+            suspend();
+        } // while
+    } else {
+        _Throw Error();
+    }
 
     if ( ch == '0' ) { // size
         suspend();
@@ -62,9 +66,13 @@ void Listing::main() {
         }
     } // if
 
-    while ( ch == ' ' || ch == '\t' ) { // whitespace
-        suspend();
-    } // while
+    if ( ch == ' ' || ch == '\t' ) {
+        while ( ch == ' ' || ch == '\t' ) { // whitespace
+            suspend();
+        } // while
+    } else {
+        _Throw Error();
+    }
 
     if ((ch >= 'A' && ch <='Z')
         || (ch >='a' && ch <= 'z')
