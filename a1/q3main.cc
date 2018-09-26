@@ -14,13 +14,11 @@ void usage( char * argv[] ) {
 
 int main( int argc, char * argv[] ) {
     istream * infile = &cin;				            // default value
-    bool isUsed = false;
 
     switch ( argc ) {
         case 2:
             try {
                 infile = new ifstream( argv[1] );
-                isUsed = true;
             } catch( uFile::Failure & ) {
                 cerr << "Error! Could not open input file \"" << argv[1] << "\"" << endl;
                 usage( argv );
@@ -56,5 +54,5 @@ int main( int argc, char * argv[] ) {
             } // try
         } // for
     }
-    if (isUsed) delete infile;
+    if ( infile != &cin ) delete infile;
 }
