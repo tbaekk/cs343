@@ -3,7 +3,7 @@
 #include <sstream>
 #include "q1binsertsort.h"
 using namespace std;
-#include <cstdlib>					                    // exit
+#include <cstdlib>					                        // exit
 
 #ifndef TYPE
 #define TYPE int
@@ -12,7 +12,7 @@ using namespace std;
 void usage( char *argv[] ) {
     cerr << "Usage: " << argv[0]
 	 << " unsorted-file [ sorted-file ] " << endl;
-    exit( EXIT_FAILURE );				                // TERMINATE
+    exit( EXIT_FAILURE );				                    // TERMINATE
 } // usage
 
 int main( int argc, char * argv[] ) {

@@ -1,51 +1,62 @@
 #ifndef _BINSERT_SORT_H_
 #define _BINSERT_SORT_H_
+#include <iostream>
+#include <string>
+using namespace std;
 
 template<typename T> _Coroutine Binsertsort {
     T value;                                                            // communication: value being passed down/up the tree
     void main() {
-        Binsertsort<T> greater;
-        Binsertsort<T> less;
-        
-        try {
-            T pivot = value;
-            suspend();  // less1 (P: binTree) & right1 (P: binTree)
-
-            for ( ;; ) {
-                if ( value < pivot )  _Enable{ less.sort( value ); };
-                if ( value >= pivot ) _Enable{ greater.sort( value ); };
-                suspend();
-            }
-            suspend();  // binTree
-        } catch ( Binsertsort<TYPE>::Sentinel ) {
-        } // try
-
-        try {
-            _Enable {
-                 _Throw Binsertsort<TYPE>::Sentinel() _At less;
-                for ( ;; ) {
-                    value = less.retrieve();
-                    suspend();
-                } // for
-            }; // enable
-        } catch ( Binsertsort<TYPE>::Sentinel ) {
-        } // try
-
-        value = pivot;
+        T pivot = value;
         suspend();
 
         try {
-            _Enable {
-                _Throw Binsertsort<TYPE>::Sentinel() _At greater;
-                for ( ;; ) {
-                    value = greater.retrieve();
-                    suspend();
-                } // for
-            };
-        } catch ( Binsertsort<TYPE>::Sentinel ) {
-        } // try
+            _Enable {}
+        } catch ( Sentinel ) {
+            return;
+        }
 
-        _Resume Binsertsort<TYPE>::Sentinel() _AT resumer();
+        Binsertsort<T> less;
+        Binsertsort<T> greater;
+        
+        try {
+            for ( ;; ) {
+                if ( value < pivot )  less.sort( value );
+                if ( value >= pivot ) greater.sort( value );
+                _Enable {}
+                suspend();
+            } // for
+        } catch ( Sentinel ) {
+            suspend();
+            try {
+                _Enable {
+                    _Resume Sentinel() _At less;
+                    for ( ;; ) {
+                        value = less.retrieve();
+                        _Enable {}
+                        suspend();
+                    } // for
+                }; // enable
+            } catch ( Sentinel ) {
+            } // try
+
+            value = pivot;
+            suspend();
+
+            try {
+                _Enable {
+                    _Resume Sentinel() _At greater;
+                    for ( ;; ) {
+                        value = greater.retrieve();
+                        _Enable {}
+                        suspend();
+                    } // for
+                }; // enable
+            } catch ( Sentinel ) {
+            } // try
+
+            _Resume Sentinel() _At resumer();
+        } // try
     }
   public:
     _Event Sentinel {};
