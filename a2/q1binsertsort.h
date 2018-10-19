@@ -7,54 +7,48 @@ using namespace std;
 template<typename T> _Coroutine Binsertsort {
     T value;                                                            // communication: value being passed down/up the tree
     void main() {
-        T pivot = value;
-        suspend();
-
         try {
-            _Enable {}
-        } catch ( Sentinel ) {
-            return;
-        }
+            T pivot = value;
 
-        Binsertsort<T> less;
-        Binsertsort<T> greater;
-        
-        try {
-            for ( ;; ) {
-                if ( value < pivot )  less.sort( value );
-                if ( value >= pivot ) greater.sort( value );
-                _Enable {}
-                suspend();
-            } // for
-        } catch ( Sentinel ) {
             suspend();
+
+            Binsertsort<T> less;
+            Binsertsort<T> greater;
+            
             try {
                 _Enable {
+                    for ( ;; ) {
+                        if ( value < pivot )  less.sort( value );
+                        if ( value >= pivot ) greater.sort( value );
+                        suspend();
+                    } // for
+                }
+            } catch ( Sentinel ) {
+                suspend();
+                try {
+                    _Enable {}
                     _Resume Sentinel() _At less;
                     for ( ;; ) {
                         value = less.retrieve();
-                        _Enable {}
                         suspend();
                     } // for
-                }; // enable
-            } catch ( Sentinel ) {
-            } // try
+                } catch ( Sentinel ) {
+                } // try
 
-            value = pivot;
-            suspend();
+                value = pivot;
+                suspend();
 
-            try {
-                _Enable {
+                try {
+                    _Enable {}
                     _Resume Sentinel() _At greater;
                     for ( ;; ) {
                         value = greater.retrieve();
-                        _Enable {}
                         suspend();
                     } // for
-                }; // enable
-            } catch ( Sentinel ) {
+                } catch ( Sentinel ) {
+                } // try
             } // try
-
+        } catch ( Sentinel ) {
             _Resume Sentinel() _At resumer();
         } // try
     }
