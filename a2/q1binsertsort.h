@@ -7,9 +7,9 @@ using namespace std;
 template<typename T> _Coroutine Binsertsort {
     T value;                                                            // communication: value being passed down/up the tree
     void main() {
+        T pivot = value;
         try {
-            T pivot = value;
-
+            _Enable {}
             suspend();
 
             Binsertsort<T> less;
@@ -24,33 +24,36 @@ template<typename T> _Coroutine Binsertsort {
                     } // for
                 }
             } catch ( Sentinel ) {
-                suspend();
-                try {
-                    _Enable {}
-                    _Resume Sentinel() _At less;
-                    for ( ;; ) {
-                        value = less.retrieve();
-                        suspend();
-                    } // for
-                } catch ( Sentinel ) {
-                } // try
+            } // try
 
-                value = pivot;
-                suspend();
-
-                try {
-                    _Enable {}
-                    _Resume Sentinel() _At greater;
-                    for ( ;; ) {
-                        value = greater.retrieve();
+            _Resume Sentinel() _At less;
+            try {
+                for ( ;; ) {
+                    value = less.retrieve();
+                    _Enable {
                         suspend();
-                    } // for
-                } catch ( Sentinel ) {
-                } // try
+                    }
+                } // for
+            } catch ( Sentinel ) {
+            } // try
+
+            value = pivot;
+            suspend();
+
+            _Resume Sentinel() _At greater;
+            try {
+                for ( ;; ) {
+                    value = greater.retrieve();
+                    _Enable {
+                        suspend();
+                    }
+                } // for
+            } catch ( Sentinel ) {
             } // try
         } catch ( Sentinel ) {
+        } _Finally {
             _Resume Sentinel() _At resumer();
-        } // try
+        }
     }
   public:
     _Event Sentinel {};
