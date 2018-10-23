@@ -1,4 +1,5 @@
-/a2/*.d
-/a2/*.o
-ImplType
-binsertsort
+/*/*.d
+/*/*.o
+/*/ImplType
+/*/MatrixImpl
+/*/BufImpl

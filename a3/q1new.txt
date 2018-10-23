@@ -1,0 +1,45 @@
+a)
+    q1darray
+        - 1.70u 0.01s 0:01.77  ( tasks=1, time=20000000 )
+        - 9.09u 0.00s 0:04.60  ( tasks=2, time=20000000 )
+        - 39.15u 0.03s 0:09.92 ( tasks=4, time=20000000 )
+    q1vector1
+        - 3.06u 0.01s 0:03.17  ( tasks=1, time=20000000 )
+        - 15.67u 0.00s 0:07.88 ( tasks=2, time=20000000 )
+        - 62.53u 0.00s 0:15.76 ( tasks=4, time=20000000 )
+    q1vector2
+        - 12.12u 0.01s 0:12.26  ( tasks=1, time=20000000 )
+        - 91.43u 0.04s 0:45.85  ( tasks=2, time=20000000 )
+        - 395.67u 0.26s 1:39.05 ( tasks=4, time=20000000 )
+    q1stack
+        - 1.10u 0.03s 0:01.21 ( tasks=1, time=20000000 )
+        - 2.37u 0.00s 0:01.23 ( tasks=2, time=20000000 )
+        - 5.14u 0.00s 0:01.36 ( tasks=4, time=20000000 )
+
+b)
+    q1darray
+        User - User code runtime increases by 7.39u when tasks increase from 1 to 2. User code runtime 
+            increases by 30.06u when tasks increase from 2 to 4. The runtime increase is roughly quadratic.
+        Real - The runtime increases linearly relative to the number of tasks
+    q1vector1
+        User - User code runtime increases by 12.36u when tasks increase from 1 to 2. User code runtime 
+            increases by 59.47u when tasks increase from 2 to 4. The runtime increase is roughly quadratic.
+        Real - The runtime increases linearly relative to the number of tasks
+    q1vector2
+        User - User code runtime increases by 79.31u when tasks increase from 1 to 2. User code runtime 
+            increases by 304.24u when tasks increase from 2 to 4. The runtime increase is roughly quadratic.
+        Real - The runtime increases roughly in linear relative to the number of tasks
+    q1stack
+        User - User code runtime increases by 1.27u when tasks increase from 1 to 2. User code runtime
+            increases by 2.77u when tasks increase from 2 to 4. The runtime increase is linear.
+        Real - There are only subtle difference in the performance between different numbers of tasks
+
+c)
+    VECTOR2 has the slowest performance because size of vector is not given; thus, memory will need to 
+    be dynamically allocated numerous times which increases runtime.
+
+    STACK has the fastest performance because it uses stack in which each task is saved on the 
+    stack so that there is no blocking.
+
+    Thus, we can see that as a data structure needs more dynamic operation and more it uses the
+    heap, performance is much slower.
