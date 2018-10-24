@@ -1,0 +1,50 @@
+b)
+    i)
+    BUSY
+        - 2.01u 0.00s 0:02.89
+    
+    NOBUSY
+        - 2.18u 0.00s 0:02.26
+    
+    BUSY ( Compiler Optimization )
+        - 1.60u 0.03s 0:02.73
+
+    NOBUSY ( Compiler Optimization )
+        - 1.73u 0.00s 0:01.82
+
+    ii)
+    The user and real time of BUSY itself and NOBUSY itself without compiler Optimization
+    are almost identical. With compiler optimization, BUSY became slightly faster by around
+    0.4u and NOBUSY became faster by around 0.4u also. BUSY was slightly faster than NOBUSY 
+    in user time for both non-compiler optimization and with compiler optimization. However,
+    NOBUSY was faster in terms of real time.
+
+    iii)
+    BUSY ( Multi )
+        - 27.10u 0.10s 0:06.88
+    
+    NOBUSY ( Multi )
+        - 32.20u 0.01s 0:08.14
+    
+    BUSY ( Compiler Optimization + Multi )
+        - 26.75u 0.04s 0:06.83
+
+    NOBUSY ( Compiler Optimization + Multi )
+        - 31.76u 0.00s 0:08.12
+
+    iv)
+    The user time of BUSY itself took longer than real time and also similar result occurred for
+    NOBUSY itself without compiler Optimization. With compiler optimization, BUSY was slightly 
+    faster by around 0.35u and NOBUSY was faster by around 0.45u. BUSY was faster than NOBUSY 
+    in user and real tiem for both non-compiler optimization and with compiler optimization by
+    around 0.5u.
+
+    v)
+    There are more context switiching in NOBUSY because it puts barging threads to sleep
+    and wake up priority threads. Thus, such actions of context switiching consumes more
+    time, as a result, performance is slower.
+
+    vi)
+    For the multiprocessor execution, as there are more producer and consumers tasks 
+    running in parallel on different processors, they are more competition for the owner
+    lock. Thus, such competition consumes time, as a result, execution takes longer.

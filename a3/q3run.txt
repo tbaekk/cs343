@@ -1,0 +1,24 @@
+sudo u++ -nodebug -DBUSY -DTYPE="int" -DSENTINEL="-1" q3main.cc -o buffer
+/usr/bin/time -f "%Uu %Ss %E" ./buffer 50 55 10000 30 10
+
+sudo u++ -nodebug -DNOBUSY -DTYPE="int" -DSENTINEL="-1" q3main.cc -o buffer
+/usr/bin/time -f "%Uu %Ss %E" ./buffer 50 55 10000 30 10
+
+sudo u++ -O2 -nodebug -DBUSY -DTYPE="int" -DSENTINEL="-1" q3main.cc -o buffer
+/usr/bin/time -f "%Uu %Ss %E" ./buffer 50 55 10000 30 10
+
+sudo u++ -O2 -nodebug -DNOBUSY -DTYPE="int" -DSENTINEL="-1" q3main.cc -o buffer
+/usr/bin/time -f "%Uu %Ss %E" ./buffer 50 55 10000 30 10
+
+
+sudo u++ -nodebug -multi -DBUSY -DTYPE="int" -DSENTINEL="-1" q3main.cc -o buffer
+/usr/bin/time -f "%Uu %Ss %E" ./buffer 50 55 10000 30 10
+
+sudo u++ -nodebug -multi -DNOBUSY -DTYPE="int" -DSENTINEL="-1" q3main.cc -o buffer
+/usr/bin/time -f "%Uu %Ss %E" ./buffer 50 55 10000 30 10
+
+sudo u++ -multi -O2 -nodebug  -DBUSY -DTYPE="int" -DSENTINEL="-1" q3main.cc -o buffer
+/usr/bin/time -f "%Uu %Ss %E" ./buffer 50 55 10000 30 10
+
+sudo u++ -multi -O2 -nodebug -DNOBUSY -DTYPE="int" -DSENTINEL="-1" q3main.cc -o buffer
+/usr/bin/time -f "%Uu %Ss %E" ./buffer 50 55 10000 30 10

@@ -28,22 +28,23 @@ void BoundedBuffer<T>::insert( T elem ) {
         lock.acquire();
 #if defined( BUSY )
         while ( buffer.size() == maxSize ) {
-            pLock.wait(lock);
-        }
+            pLock.wait( lock );
+        } // while
 #elif defined( NOBUSY )
         if ( buffer.size() == maxSize || stopBarging ) {
-            pLock.wait(lock);
+            pLock.wait( lock );
         } // if
         stopBarging = false;
 #else
     #error unknown preprocessor variable ( BUSY | NOBUSY )
 #endif // if
 
+        assert( buffer.size() < maxSize );
         buffer.push(elem);
 
 #if defined( BUSY )
         if ( buffer.size() < maxSize ) {
-            cLock.signal();
+          cLock.signal();
         } // if
 #elif defined( NOBUSY )
         stopBarging = true;
@@ -58,7 +59,7 @@ void BoundedBuffer<T>::insert( T elem ) {
     } catch( ... ) {
     } _Finally {
         lock.release();
-    }
+    } // try
 }
 
 template <typename T>
@@ -67,27 +68,30 @@ T BoundedBuffer<T>::remove() {
         lock.acquire();
 #if defined( BUSY )
         while ( buffer.empty() ) {
-            cLock.wait(lock);
-        }
+            cLock.wait( lock );
+        } // while
 #elif defined( NOBUSY )
         if ( buffer.empty() || stopBarging ) {
-            cLock.wait(lock);
+            cLock.wait( lock );
         } // if
         stopBarging = false;
 #else
     #error unknown preprocessor variable ( BUSY | NOBUSY )
 #endif // if
 
+        assert( !buffer.empty() );
         T val = buffer.front();
         buffer.pop();
 
 #if defined( BUSY )
-        pLock.signal();
+        if ( buffer.size() > 0 ) {
+          pLock.signal();
+        } // if
 #elif defined( NOBUSY )
         stopBarging = true;
         if ( !pLock.empty() ) {
             pLock.signal();
-        } else if ( !pLock.empty() && !cLock.empty() ) {
+        } else if ( !buffer.empty() && !cLock.empty() ) {
             cLock.signal();
         } else {
             stopBarging = false;
@@ -97,7 +101,7 @@ T BoundedBuffer<T>::remove() {
     } catch( ... ) {
     } _Finally {
         lock.release();
-    }
+    } // try
 }
 
 #endif
