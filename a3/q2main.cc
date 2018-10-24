@@ -1,9 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <cstdlib>                                      // access: rand, srand
-#include <cstring>                                      // access: strcmp
-#include <uCobegin.h>
+#include "q2matrixmultiply.h"
 using namespace std;
 #include <unistd.h>                                     // access: getpid
 
@@ -19,15 +14,15 @@ void usage( char *argv[] ) {
 } // usage
 
 int main( int argc, char * argv[] ) {
-    istream *fileX, *fileY;
+    ifstream fileX, fileY;
     int xr, xc_yr, yc;
     int processors = 1;
 
     switch ( argc ) {
         case 6:
             try {
-                fileX = new ifstream( argv[4] );
-                fileY = new ifstream( argv[5] );
+                fileX.open( argv[4] );
+                fileY.open( argv[5] );
                 isFileExist = true;
             } catch( uFile::Failure ) {                 // open failed ?
                 cerr << "Error! Could not open input files \"" << argv[4] << " | " << argv[5] << "\"" << endl;
@@ -45,9 +40,9 @@ int main( int argc, char * argv[] ) {
         // FALL THROUGH
         case 4:
             try {
-                xr = stoi(argv[1]);
+                xr    = stoi(argv[1]);
                 xc_yr = stoi(argv[2]);
-                yc = stoi(argv[3]);
+                yc    = stoi(argv[3]);
                 break;
             } catch( ... ) {
                 usage( argv );
@@ -59,9 +54,30 @@ int main( int argc, char * argv[] ) {
     
     uProcessor p[processors - 1];                       // number of kernel threads
     
-    int *Z[xr], *X[xr], *Y[xc_yr];
+    try {
+        int **X, **Y;
+        X = genMatrix( xr, xc_yr, fileX );
+        // for (int i = 0; i < xr; i++) {
+        //     for (int j = 0; j < xc_yr; j++) {
+        //         cout << X[i][j] << " ";
+        //     }
+        //     cout << endl;
+        // }
+        Y = genMatrix( xc_yr, yc, fileY );
 
-    if ( !isFileExist ) {
-        
+        int **Z = initMatrix( xr, yc );
+        matrixmultiply( Z, X, xr, xc_yr, Y, yc );
+
+        // if ( isFileExist ) {
+            // output( Z, X, Y, xr, xc_yr, yc );
+        // }
+
+        // cleanup
+        freeMatrix( X, xr );
+        freeMatrix( Y, xc_yr );
+        freeMatrix( Z, xr) ;
+    } catch ( ... ) {
+        cerr << "Error! Invalid value in the given file" << endl;
     }
+    
 }
