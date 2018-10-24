@@ -64,7 +64,7 @@ int main( int argc, char * argv[] ) {
 
         if ( isFileExist ) {
             output( Z, X, Y, xr, xc_yr, yc );
-        }
+        } // if
 
         // cleanup
         freeMatrix( X, xr );
@@ -72,6 +72,6 @@ int main( int argc, char * argv[] ) {
         freeMatrix( Z, xr) ;
     } catch ( ... ) {
         cerr << "Error! Invalid value in the given file" << endl;
-    }
+    } // try
     
 }

@@ -1,3 +1,7 @@
+#ifndef _Q2MATRIXMULTIPLY_H_
+#define _Q2MATRIXMULTIPLY_H_
+
+
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -23,9 +27,9 @@ void sumRow( int *Z[], int *X[], unsigned int row, unsigned int xc, int *Y[], un
         int sum = 0;
         for ( unsigned int i = 0; i < xc; i++ ) {
             sum += X[row][i] * Y[i][col];
-        }
+        } // for
         Z[row][col] = sum;
-    }
+    } // for
 }
 
 
@@ -39,10 +43,9 @@ _Task Calculator {
         if ( 2 * row + 2 < xr ) {
             Calculator jthRow(Z, X, 2 * row + 2, xc, Y, yc, xr);
             Calculator ithRow(Z, X, 2 * row + 1, xc, Y, yc, xr);
-        }
-        else if ( 2 * row + 1 < xr ) {
+        } else if ( 2 * row + 1 < xr ) {
             Calculator ithRow(Z, X, 2 * row + 1, xc, Y, yc, xr);
-        }
+        } // if
         sumRow( Z, X, row, xc, Y, yc );
     }
 
@@ -90,7 +93,7 @@ int **initMatrix( int rows, int cols ) {
     int **matrix = new int*[rows];
     for ( int r = 0; r < rows; r++ ) {
         matrix[r] = new int[cols];
-    }
+    } // for
     return matrix;
 }
 
@@ -115,13 +118,13 @@ int **genMatrix( int rows, int cols, ifstream &matrixFile, bool isFileExist ) {
                     matrixFile >> matrix[r][c];
                 } else {
                     matrix[r][c] = 37;
-                }
-            }
-        }
+                } // if
+            } // for
+        } // for
         return matrix;
     } catch ( ... ) {
         throw exception();
-    }
+    } // try
     
 }
 
@@ -137,9 +140,9 @@ int **genMatrix( int rows, int cols, ifstream &matrixFile, bool isFileExist ) {
 ************************************/
 
 void freeMatrix( int **matrix, int rows ) {
-    for (int r = 0; r < rows; r++) {
+    for ( int r = 0; r < rows; r++ ) {
         delete [] matrix[r];
-    }
+    } // for
     delete [] matrix;
 }
 
@@ -156,9 +159,9 @@ void freeMatrix( int **matrix, int rows ) {
 
 string genSpace( int num, char fill) {
     string space = "";
-    for (int i = 0; i < num; i++) {
+    for ( int i = 0; i < num; i++ ) {
         space = space + fill;
-    }
+    } // for
     return space;
 }
 
@@ -183,25 +186,28 @@ void output( int *Z[], int *X[], int *Y[], int xr, int xc_yr, int yc ) {
             int numLength = to_string( Y[i][j] ).length();
             string buff = genSpace( 9 - numLength, ' ' );
             cout << buff << Y[i][j];
-        }
+        } // for
         cout << " " << endl;
-    }
+    } // for
 
     int rightSpacing = 9 * yc + 1;
-    cout << genSpace(leftSpacing, '-') << "*" << genSpace(rightSpacing, '-') << endl;
+    cout << genSpace( leftSpacing, '-' ) << "*" << genSpace( rightSpacing, '-' ) << endl;
 
     for ( int i = 0; i < xr; i++ ) {
         for ( int j = 0; j < xc_yr; j++ ) {
             int numLength = to_string( X[i][j] ).length();
             string buff = genSpace( 9 - (j == 0 ? 1 : 0) - numLength, ' ' );
             cout << buff << X[i][j];
-        }
+        } // for
         cout << genSpace( 4, ' ' ) << '|';
         for ( int j = 0; j < yc; j++ ) {
             int numLength = to_string( Z[i][j] ).length();
             string buff = genSpace( 9 - numLength, ' ' );
             cout << buff << Z[i][j];
-        }
+        } // for
         cout << " " << endl;
-    }
+    } // for
 }
+
+
+#endif
