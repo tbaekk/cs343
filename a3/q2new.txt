@@ -1,0 +1,63 @@
+b)
+    i)
+    IMPLICT
+        - 22.10u 0.14s 0:22.23r ( processors = 1 )
+        - 16.32u 0.17s 0:08.27r ( processors = 2 )
+        - 18.31u 0.25s 0:04.70r ( processors = 4 )
+        - 33.17u 0.12s 0:04.58r ( processors = 8 )
+        - 31.71u 0.12s 0:04.09r ( processors = 16 )
+    EXPLICIT
+        - 24.10u 0.09s 0:24.33r ( processors = 1 )
+        - 17.93u 0.18s 0:09.11r ( processors = 2 )
+        - 23.51u 0.28s 0:06.09r ( processors = 4 )
+        - 31.95u 0.07s 0:04.27r ( processors = 8 )
+        - 33.89u 0.09s 0:04.53r ( processors = 16 )
+    
+    ii)
+    For both implicit and explicit concurrency, as kernel thread increases, performance of
+    the program increases asymptotically. You can see that as threads increase, the real time
+    of the program could approach to 0 if you increase much more threads. For example, for implicit
+    concurrency, increasing 1 to 2 threads shorten the time by more than half. Then, 2 to 4 threads
+    also cut in half. However, from 4 to 8 and 8 to 16 threads, there is small performance increase,
+    which shows that the performance increases asymptotically. 
+
+    iii)
+    The implicit concurrency method seems to be faster than the explicit concurrency method for
+    both real and user time.
+        For 1 processor, implicit concurrency is 2.0u and 2.1s faster.
+        For 2 processors, implicit concurrency is 1.61u and 0.84s faster.
+        For 4 processors, implicit concurrency is 5.2u and 1.39s faster.
+        For 8 processors, implicit concurrency is 1.22u and 0.31s slower.
+        For 16 processors, implicit concurrency is 2.18u and 0.44s faster.
+
+c)
+    i)
+     IMPLICT
+        - 7.67u 0.07s 0:07.83r ( processors = 1 )
+        - 8.73u 0.26s 0:04.53r ( processors = 2 )
+        - 7.70u 0.12s 0:01.99r ( processors = 4 )
+        - 11.92u 0.10s 0:01.73r ( processors = 8 )
+        - 12.78u 0.15s 0:01.77r ( processors = 16 )
+    EXPLICIT
+        - 7.15u 0.17s 0:07.34r ( processors = 1 )
+        - 6.96u 0.07s 0:03.55r ( processors = 2 )
+        - 8.39u 0.14s 0:02.19r ( processors = 4 )
+        - 12.65u 0.17s 0:01.74r ( processors = 8 )
+        - 12.32u 0.14s 0:01.69r ( processors = 16 )
+    
+    ii)
+    The compiler optimization makes the performance of the program much faster for
+    both implicit and explicit concurrency method.
+        IMPLICT
+            For 1 processor, it reduced by 14.4s.
+            For 2 processors, it reduced by 3.74s.
+            For 4 processors, it reduced by 2.71s.
+            For 8 processors, it reduced by 2.85s.
+            For 16 processors, it reduced by 2.32s.
+        EXPLICIT
+            For 1 processor, it reduced by 16.5s.
+            For 2 processors, it reduced by 5.56s.
+            For 4 processors, it reduced by 3.9s.
+            For 8 processors, it reduced by 2.53s.
+            For 16 processors, it reduced by 2.84s.
+    

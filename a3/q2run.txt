@@ -1,0 +1,27 @@
+sudo u++ -multi -nodebug -DIMPLICIT q2main.cc -o matrixmultiply
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000 2
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000 4
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000 8
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000 16
+
+sudo u++ -multi -nodebug -DEXPLICIT q2main.cc -o matrixmultiply
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000 2
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000 4
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000 8
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000 16
+
+sudo u++ -multi -O2 -nodebug -DIMPLICIT q2main.cc -o matrixmultiply
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000 2
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000 4
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000 8
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000 16
+
+sudo u++ -multi -O2 -nodebug -DEXPLICIT q2main.cc -o matrixmultiply
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000 2
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000 4
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000 8
+/usr/bin/time -f "%Uu %Ss %Er" ./matrixmultiply 500 600 10000 16

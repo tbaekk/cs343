@@ -106,16 +106,15 @@ int **initMatrix( int rows, int cols ) {
     Errors: If invalid value is in the given value, throw exception.
 ************************************/
 
-int **genMatrix( int rows, int cols, ifstream &matrixFile ) {
+int **genMatrix( int rows, int cols, ifstream &matrixFile, bool isFileExist ) {
     int **matrix = initMatrix( rows, cols );
     try {
         for ( int r = 0; r < rows; r++ ) {
             for ( int c = 0; c < cols; c++ ) {
-                if ( matrixFile ) {
+                if ( isFileExist ) {
                     matrixFile >> matrix[r][c];
                 } else {
                     matrix[r][c] = 37;
-                    cout << matrix[r][c] << endl;
                 }
             }
         }

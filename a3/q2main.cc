@@ -31,7 +31,7 @@ int main( int argc, char * argv[] ) {
         // FALL THROUGH
         case 5:
             try {
-                if ( !fileX && !fileY ) {
+                if ( !isFileExist ) {
                     processors = stoi( argv[4] );
                 }
             } catch ( ... ) {
@@ -56,21 +56,15 @@ int main( int argc, char * argv[] ) {
     
     try {
         int **X, **Y;
-        X = genMatrix( xr, xc_yr, fileX );
-        // for (int i = 0; i < xr; i++) {
-        //     for (int j = 0; j < xc_yr; j++) {
-        //         cout << X[i][j] << " ";
-        //     }
-        //     cout << endl;
-        // }
-        Y = genMatrix( xc_yr, yc, fileY );
+        X = genMatrix( xr, xc_yr, fileX, isFileExist );
+        Y = genMatrix( xc_yr, yc, fileY, isFileExist );
 
         int **Z = initMatrix( xr, yc );
         matrixmultiply( Z, X, xr, xc_yr, Y, yc );
 
-        // if ( isFileExist ) {
-            // output( Z, X, Y, xr, xc_yr, yc );
-        // }
+        if ( isFileExist ) {
+            output( Z, X, Y, xr, xc_yr, yc );
+        }
 
         // cleanup
         freeMatrix( X, xr );
