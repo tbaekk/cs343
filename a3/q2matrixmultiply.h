@@ -1,6 +1,5 @@
-#ifndef _Q2MATRIXMULTIPLY_H_
-#define _Q2MATRIXMULTIPLY_H_
-
+#ifndef __Q2MATRIXMULTIPLY_H__
+#define __Q2MATRIXMULTIPLY_H__
 
 #include <iostream>
 #include <iomanip>
@@ -12,7 +11,7 @@
 using namespace std;
 
 
-/*********** sumRow ***********
+/*********** rowSummation ***********
     Purpose: Sums up the rows of given matrix.
 
 
@@ -22,7 +21,7 @@ using namespace std;
     Errors: No error.
 ************************************/
 
-void sumRow( int *Z[], int *X[], unsigned int row, unsigned int xc, int *Y[], unsigned int yc ) {
+void rowSummation( int *Z[], int *X[], unsigned int row, unsigned int xc, int *Y[], unsigned int yc ) {
     for ( unsigned int col = 0; col < yc; col++ ) {
         int sum = 0;
         for ( unsigned int i = 0; i < xc; i++ ) {
@@ -33,7 +32,7 @@ void sumRow( int *Z[], int *X[], unsigned int row, unsigned int xc, int *Y[], un
 }
 
 
-_Task Calculator {
+_Task MatrixCalculator {
     // Matrices
     int **X, **Y, **Z;
     // Ranges
@@ -41,23 +40,23 @@ _Task Calculator {
 
     void main() {
         if ( 2 * row + 2 < xr ) {
-            Calculator jthRow(Z, X, 2 * row + 2, xc, Y, yc, xr);
-            Calculator ithRow(Z, X, 2 * row + 1, xc, Y, yc, xr);
+            MatrixCalculator jthRow(Z, X, 2 * row + 2, xc, Y, yc, xr);
+            MatrixCalculator ithRow(Z, X, 2 * row + 1, xc, Y, yc, xr);
         } else if ( 2 * row + 1 < xr ) {
-            Calculator ithRow(Z, X, 2 * row + 1, xc, Y, yc, xr);
+            MatrixCalculator ithRow(Z, X, 2 * row + 1, xc, Y, yc, xr);
         } // if
-        sumRow( Z, X, row, xc, Y, yc );
+        rowSummation( Z, X, row, xc, Y, yc );
     }
 
     public:
-        Calculator( int *Z[], int *X[], unsigned int row, unsigned int xc_yr, int *Y[], unsigned int yc, unsigned int xr ) :
+        MatrixCalculator( int *Z[], int *X[], unsigned int row, unsigned int xc_yr, int *Y[], unsigned int yc, unsigned int xr ) :
             Z(Z), X(X), Y(Y), row(row), xc(xc_yr), yc(yc), xr(xr)  {}
 };
 
 
 /*********** matrixmultiply ***********
-    Purpose: Uses the task calculator to compute two matrix multiplication by
-        using the method sumRow() which calculates summation of each rows.
+    Purpose: Uses the task MatrixCalculator to compute two matrix multiplication by
+        using the method rowSummation() which calculates summation of each rows.
 
 
     Returns: None.
@@ -68,11 +67,11 @@ _Task Calculator {
 
 void matrixmultiply( int *Z[], int *X[], unsigned int xr, unsigned int xc, int *Y[], unsigned int yc ) {
     #if defined( IMPLICIT )
-        COFOR( row, 0, xr, // for ( int row = 0; row < rows; row += 1 )
-            sumRow( Z, X, row, xc, Y, yc );
+        COFOR( row, 0, xr,
+            rowSummation( Z, X, row, xc, Y, yc );
         );
     #elif defined( EXPLICIT )
-        Calculator r( Z, X, 0, xc, Y, yc, xr );
+        MatrixCalculator rows( Z, X, 0, xc, Y, yc, xr );
     #else
         #error Preprocessor variable IMPLICIT or EXPLICIT not defined
     #endif
@@ -128,26 +127,7 @@ int **genMatrix( int rows, int cols, ifstream &matrixFile, bool isFileExist ) {
     
 }
 
-
-/*********** freeMatrix ***********
-    Purpose: Frees a matrix.
-
-
-    Returns: None
-
-
-    Errors: If matrix is not allocated, it can't be free.
-************************************/
-
-void freeMatrix( int **matrix, int rows ) {
-    for ( int r = 0; r < rows; r++ ) {
-        delete [] matrix[r];
-    } // for
-    delete [] matrix;
-}
-
-
-/*********** genSpace ***********
+/*********** genWhiteSpace ***********
     Purpose: Generate a string filled with the given character in the parameter.
 
 
@@ -157,7 +137,7 @@ void freeMatrix( int **matrix, int rows ) {
     Errors: No error.
 ************************************/
 
-string genSpace( int num, char fill) {
+string genWhiteSpace( int num, char fill) {
     string space = "";
     for ( int i = 0; i < num; i++ ) {
         space = space + fill;
@@ -165,8 +145,17 @@ string genSpace( int num, char fill) {
     return space;
 }
 
+void prettyPrint( int *matrix[], int row, int cols, bool isBottomLeft = false ) {
+    for ( int j = 0; j < cols; j++ ) { 
+        int len = isBottomLeft ?  9 - (j == 0 ? 1 : 0) : 9;
+        int numLength = to_string( matrix[row][j] ).length();
+        string whiespace = genWhiteSpace( len - numLength, ' ' );
+        cout << whiespace << matrix[row][j];
+    } // for
+}
 
-/*********** output ***********
+
+/*********** printMatrix ***********
     Purpose: Prints the multiplicaiton of two matricies (Z = X * Y).
 
 
@@ -176,35 +165,25 @@ string genSpace( int num, char fill) {
     Errors: No error.
 ************************************/
 
-void output( int *Z[], int *X[], int *Y[], int xr, int xc_yr, int yc ) {
+void printMatrix( int *Z[], int *X[], int xr, int xc_yr, int *Y[], int yc ) {
     int leftSpacing = -1 + xc_yr * 9 + 4;
-    string space = genSpace( leftSpacing, ' ' );
+    string leftSpace = genWhiteSpace( leftSpacing, ' ' );
 
-    for ( int i = 0; i < xc_yr; i++ ) {
-        cout << space << "|";
-        for ( int j = 0; j < yc; j++ ) {
-            int numLength = to_string( Y[i][j] ).length();
-            string buff = genSpace( 9 - numLength, ' ' );
-            cout << buff << Y[i][j];
-        } // for
+    for ( int i = 0; i < xc_yr; i++ ) {                             // Print top half
+        cout << leftSpace << "|";                                   // Print top left
+        prettyPrint( Y, i, yc );                                    // Print top right
         cout << " " << endl;
     } // for
 
     int rightSpacing = 9 * yc + 1;
-    cout << genSpace( leftSpacing, '-' ) << "*" << genSpace( rightSpacing, '-' ) << endl;
+    
+    cout << genWhiteSpace( leftSpacing, '-' ) 
+     << "*" << genWhiteSpace( rightSpacing, '-' ) << endl;               // Print center horizontal
 
-    for ( int i = 0; i < xr; i++ ) {
-        for ( int j = 0; j < xc_yr; j++ ) {
-            int numLength = to_string( X[i][j] ).length();
-            string buff = genSpace( 9 - (j == 0 ? 1 : 0) - numLength, ' ' );
-            cout << buff << X[i][j];
-        } // for
-        cout << genSpace( 4, ' ' ) << '|';
-        for ( int j = 0; j < yc; j++ ) {
-            int numLength = to_string( Z[i][j] ).length();
-            string buff = genSpace( 9 - numLength, ' ' );
-            cout << buff << Z[i][j];
-        } // for
+    for ( int i = 0; i < xr; i++ ) {                                // Print bottom half
+        prettyPrint( X, i, xc_yr, true );                           // Print bottom left
+        cout << genWhiteSpace( 4, ' ' ) << '|';
+        prettyPrint( Z, i, yc );                                    // Print bottom right
         cout << " " << endl;
     } // for
 }

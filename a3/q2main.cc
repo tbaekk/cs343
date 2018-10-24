@@ -6,10 +6,10 @@ bool isFileExist = false;
 
 void usage( char *argv[] ) {
     cerr << "Usage: " << argv[0]
-	 << " [ xrows (> 0"
-	 << ") [ xcols-yrows (> 0"
-     << ") [ ycols (> 0"
-	 << ") [ processors (> 0) | X-matrix-file Y-matrix-file ] ] ] ]" << endl;
+	 << " xrows (> 0"
+	 << ") xcols-yrows (> 0"
+     << ") ycols (> 0"
+	 << ") [ processors (> 0) | X-matrix-file Y-matrix-file ]" << endl;
     exit( EXIT_FAILURE );				// TERMINATE
 } // usage
 
@@ -63,13 +63,20 @@ int main( int argc, char * argv[] ) {
         matrixmultiply( Z, X, xr, xc_yr, Y, yc );
 
         if ( isFileExist ) {
-            output( Z, X, Y, xr, xc_yr, yc );
+            printMatrix( Z, X, xr, xc_yr, Y, yc );
         } // if
 
         // cleanup
-        freeMatrix( X, xr );
-        freeMatrix( Y, xc_yr );
-        freeMatrix( Z, xr) ;
+        for ( int r = 0; r < xr; r++ ) {
+            delete [] X[r];
+            delete [] Z[r];
+        } // for
+        delete [] X;
+        delete [] Z;
+        for ( int r = 0; r < xc_yr; r++ ) {
+            delete [] Y[r];
+        } // for
+        delete [] Y;
     } catch ( ... ) {
         cerr << "Error! Invalid value in the given file" << endl;
     } // try
