@@ -1,6 +1,6 @@
 OPT:= # -multi -O2
 MIMPL:=EXPLICIT
-BIMPL:=NOBUSY
+BIMPL:=BUSY
 TYPE:=int
 SENTINEL:=-1
 
@@ -12,7 +12,7 @@ MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 OBJECTS1 = q2main.o
 EXEC1 = matrixmultiply				# 1st executable name
 
-OBJECTS2 = # object files forming 2nd executable with prefix "q3"
+OBJECTS2 = q3main.o
 EXEC2 = buffer					# 2nd executable name
 
 OBJECTS = ${OBJECTS1} ${OBJECTS2}		# all object files
