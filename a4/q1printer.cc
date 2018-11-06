@@ -19,10 +19,9 @@ Printer::Printer( unsigned int voters ) : voters(voters) {
 } // Printer::Printer
 
 Printer::~Printer() {
-    for ( unsigned int i = 0; i < Printer::voters; ++i ) {              // Check if there are remaining info yet to be printed before we delete them
-        if ( Printer::isExist( i ) ) {
-            print();
-            break;
+    for ( unsigned int i = 0; i < voters; ++i ) {                       // Check if there are remaining info yet to be printed before we delete them
+        if ( isExist( i ) ) {
+            print(); break;
         } // if
     } // for
     delete buffer;
@@ -32,7 +31,18 @@ Printer::~Printer() {
 #endif
 } // Printer::~Printer
 
-void Printer::flush() {                                                 // Helper that flushes the buffer
+
+/*********** flush ***********
+    Purpose: Flushes the buffer.
+
+
+    Returns: None.
+
+
+    Errors: If buffer is empty, could cause index out of bounds.
+************************************/
+
+void Printer::flush() {
     int len = 8 * voters;
     for ( int i = 0; i < len; ++i ) {
         if ( i % 8 == 0) {
@@ -43,7 +53,18 @@ void Printer::flush() {                                                 // Helpe
     } // for
 } // Printer::flush
 
-void Printer::print() {                                                 // Helper that print the buffer on screen
+
+/*********** print ***********
+    Purpose: Print the buffer on screen.
+
+
+    Returns: None.
+
+
+    Errors: If buffer is empty, could cause index out of bounds.
+************************************/
+
+void Printer::print() {
     for ( unsigned int i = 0; i < 8 * Printer::voters; ++i ) {
         if ( buffer[i] == NULL ) continue;
         cout << buffer[i];
@@ -53,7 +74,17 @@ void Printer::print() {                                                 // Helpe
 } // Printer::print
 
 
-bool Printer::isExist( unsigned int id ) {                              // Helper that check if there are info stored in the buffer of the id-th voter
+/*********** isExist ***********
+    Purpose: Checks if buffer exists in the i-th voter.
+
+
+    Returns: None.
+
+
+    Errors: If buffer is empty, could cause index out of bounds.
+************************************/
+
+bool Printer::isExist( unsigned int id ) {
     return buffer[ 8 * id ] != '\t';
 } // Printer::isExist
 
@@ -102,9 +133,11 @@ void Printer::print( unsigned int id, Voter::States state, unsigned int numBlock
     string tmp = to_string( numBlocked );
     for ( ;; ) {
         char c = tmp[0];
-      if ( tmp.empty() ) break;
-        buffer[ i++ ] = c;
+        if ( tmp.empty() ) {
+            break;
+        } // if
+        buffer[i++] = c;
         tmp = tmp.substr( 1 );
-    }
-    buffer[ i++ ] = '\t';
+    } // for
+    buffer[i++] = '\t';
 } // Printer::print
