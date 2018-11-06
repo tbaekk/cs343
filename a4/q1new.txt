@@ -1,0 +1,17 @@
+b)
+    i)
+    Mutex/Sync Method
+        - Incompleted
+    Semaphore Method
+        - Incompleted
+    Barrier Method
+        - 1.76u 0.04s 0:01.87r 30600kb ( 1 processor )
+        - 1.75u 0.03s 0:01.77r 30600kb ( 2 processors )
+
+    ii)
+    There are two caes with the performance difference, for Barrier method, if group size is constant,
+    as locks increase performance decreaes. For example, with 130 voters and group size of 20, it had a
+    real time of 2.56r while with 110 voters and same group size, it had a real time of 2.09r. On the other
+    hand, as kernel threads increaes, performance increaes. For example, for above timing results, it increased
+    by 0.1r.
+    

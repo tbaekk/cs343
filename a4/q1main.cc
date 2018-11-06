@@ -1,5 +1,8 @@
 #include <iostream>
 #include "MPRNG.h"
+#include "q1voter.h"
+#include "q1printer.h"
+#include "q1tallyVotes.h"
 
 using namespace std;
 
@@ -44,5 +47,15 @@ int main( int argc, char * argv[] ) {
 
     mprng.set_seed( seed );
 
+    Printer printer( voters );
+    TallyVotes tally( voters, group, printer );
+    Voter *voterArray[ voters ];
 
+    for ( int i = 0; i < voters; ++i ) {                        // Initilize voters
+        voterArray[ i ] = new Voter( i, votes, tally, printer );
+    } // for
+
+    for ( int j = 0; j < voters; ++j ) {                        // Wait all voters to finish
+        delete voterArray[ j ];
+    } // for
 }

@@ -9,44 +9,45 @@ TallyVotes::TallyVotes( unsigned int voters, unsigned int group, Printer & print
 
 TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
     if ( numAvailVoters < group ) {
+        uBarrier::block();
         _Throw Failed();
-    } 
+    } // if
 
+    countVotes( ballot );
 #if defined ( OUTPUT ) 
     printer.print( id, Voter::Vote, ballot );
 #endif
 
-    countVotes( ballot );
-
-#if defined ( OUTPUT )
-    printer.print( id, Voter::Block, uBarrier::waiters() + 1 );
+    if ( uBarrier::waiters() + 1 < group ) {
+#if defined ( OUTPUT ) 
+        printer.print( id, Voter::Block, uBarrier::waiters() + 1 );
 #endif
+    } // if
+    
     uBarrier::block();
-#if defined ( OUTPUT )
-    printer.print( id, Voter::Unblock, uBarrier::waiters() );
-#endif
+
     if ( numAvailVoters < group ) {
         _Throw Failed();
-    } 
+    } // if
 
     if ( lastVoter == &uThisTask() ) {
-#if defined ( OUTPUT )        
+        tour = bestVote();
+        total = { 0, 0, 0 };
+#if defined ( OUTPUT ) 
         printer.print( id, Voter::Complete );
 #endif
-    }
+    } // if
 
-    total = { 0, 0, 0 };
-
-    return bestVote();
-}
+    return tour;
+} // TallyVotes::vote
 
 void TallyVotes::last() {
     lastVoter = &uThisTask();
-}
+} // TallyVotes::last
 
 void TallyVotes::done() {
     numAvailVoters--;
     if ( numAvailVoters < group ) {
         uBarrier::block();
     }
-}
+} // TallyVotes::done
