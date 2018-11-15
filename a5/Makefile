@@ -1,0 +1,50 @@
+TYPE:=EXT
+
+CXX = u++					# compiler
+CXXFLAGS = -g -multi -O2 -std=c++11 -Wall -Wextra -MMD -D${TYPE} # compiler flags
+MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
+
+OBJECTS = q2main.o q2tallyVotes${TYPE}.o q2voter.o q2printer.o # list of object files for question 2 prefixed with "q2"
+EXEC = vote
+
+DEPENDS = ${OBJECTS:.o=.d}			# substitute ".o" with ".d"
+
+#############################################################
+
+.PHONY : all clean
+
+all : ${EXEC}					# build all executables
+
+-include LockImpl
+
+ifeq (${LOCKIMPL},${TYPE})			# same implementation type as last time ?
+${EXEC} : ${OBJECTS}
+	${CXX} ${CXXFLAGS} $^ -o $@
+else
+ifeq (${TYPE},)				# no implementation type specified ?
+# set type to previous type
+TYPE=${LOCKIMPL}
+${EXEC} : ${OBJECTS}
+	${CXX} ${CXXFLAGS} $^ -o $@
+else						# implementation type has changed
+.PHONY : ${EXEC}
+${EXEC} :
+	rm -f LockImpl
+	touch q2tallyVotes.h
+	sleep 1
+	${MAKE} ${EXEC} TYPE="${TYPE}"
+endif
+endif
+
+LockImpl :
+	echo "LOCKIMPL=${TYPE}" > LockImpl
+	sleep 1
+
+#############################################################
+
+${OBJECTS} : ${MAKEFILE_NAME}			# OPTIONAL : changes to this file => recompile
+
+-include ${DEPENDS}				# include *.d files containing program dependences
+
+clean :						# remove files that can be regenerated
+	rm -f *.d *.o ${EXEC} LockImpl
