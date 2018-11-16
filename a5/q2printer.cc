@@ -1,29 +1,69 @@
 #include <iostream>
 #include <string>
-#include "q1printer.h"
+#include "q2printer.h"
 
 using namespace std;
 
+State::State( unsigned int id, Voter::States state ) : id(id), state(state) {}
+
+State::State( unsigned int id, Voter::States state, TallyVotes::Tour tour ) : 
+  id(id), state(state), tour(tour) {}
+
+State::State( unsigned int id, Voter::States state, TallyVotes::Ballot ballot ) :
+  id(id), state(state), ballot(ballot) {}
+
+State::State( unsigned int id, Voter::States state, unsigned int numBlocked ) 
+  : id(id), state(state), numBlocked(numBlocked) {}
+
+string State::format() {
+  switch (state) {
+    case Voter::States::Start:
+    case Voter::States::Barging:
+    case Voter::States::Complete:
+    case Voter::States::Terminated:
+      return string(1, state);
+    case Voter::States::Failed:
+      return string(1, state);
+    case Voter::States::Finished:
+      return string(1, state) + " " + string(1, tour);
+    case Voter::States::Vote:
+      return string(1, state) + " " + to_string(ballot.picture) + "," + to_string(ballot.statue) + "," + to_string(ballot.giftshop);
+    case Voter::States::Block:
+    case Voter::States::Unblock:
+      return string(1, state) + " " + to_string(numBlocked);
+    default:
+      throw; // invalid state
+  }
+}
+
 Printer::Printer( unsigned int voters ) : voters(voters) {
-    buffer = new char[ 8 * voters ];                                    // Printer buffer, which consists of 8 char per voter
-    flush();
-    string delim = "", star = "*******";
-    for ( unsigned int i = 0; i < voters; ++i ) {                       // Print the header info
-        cout << "V" << i << '\t';
-        delim += star + '\t';
-    } // for
+    Printer::voters = voters;
+    buffer = new State*[voters]; // 1 buffer slot for each voter
+    for (unsigned int i = 0; i < voters; ++i) {
+        buffer[i] = nullptr; // initialize to nullptr
+    }
+
+    // output header
+    cout << "V0";
+    for (unsigned int i = 1; i < voters; ++i) {
+        cout << "\tV" << i;
+    }
     cout << endl;
-    cout << delim << endl;                                              // Print the separating stars
+
+    cout << "*******";
+    for (unsigned int i = 1; i < voters; ++i) {
+        cout << "\t*******";
+    }
+    cout << endl;
 } // Printer::Printer
 
 Printer::~Printer() {
-    for ( unsigned int i = 0; i < voters; ++i ) {                       // Check if there are remaining info yet to be printed before we delete them
-        if ( isExist( i ) ) {
-            print(); break;
-        } // if
-    } // for
-    delete buffer;
-    cout << "*****************" << endl;                                // Print the ending info
+    flush();
+    for (unsigned int i = 0; i < voters; ++i) {
+        delete buffer[i];
+    }
+    delete[] buffer;
+    cout << "*****************" << endl;
     cout << "All tours started" << endl;
 } // Printer::~Printer
 
@@ -39,101 +79,59 @@ Printer::~Printer() {
 ************************************/
 
 void Printer::flush() {
-    int len = 8 * voters;
-    for ( int i = 0; i < len; ++i ) {
-        if ( i % 8 == 0) {
-            buffer[i] = '\t';                                           // Set the first char of the buffer for each voter to be \t
-        } else {
-            buffer[i] = NULL;                                           // Set all other chars to be NULL
-        } // if
-    } // for
+    // figure out index to stop printing at
+    unsigned int highest;
+    for (unsigned int id = voters - 1; id >= 0; --id) {
+        if (buffer[id] != nullptr) {
+            highest = id;
+            break;
+        }
+    }
+
+    if (buffer[0] != nullptr) {
+        cout << buffer[0]->format();
+        // clear buffer
+        delete buffer[0];
+        buffer[0] = nullptr;
+    }
+    for (unsigned int id = 1; id <= highest; ++id) { // output contents of all buffer voters
+        if (buffer[id] != nullptr) {
+            cout << "\t" << buffer[id]->format();
+
+            // clear buffer
+            delete buffer[id];
+            buffer[id] = nullptr;
+        } else if (id != highest) {
+            cout << "\t";
+        }
+    }
+    cout << endl;
 } // Printer::flush
 
-
-/*********** print ***********
-    Purpose: Print the buffer on screen.
-
-
-    Returns: None.
-
-
-    Errors: If buffer is empty, could cause index out of bounds.
-************************************/
-
-void Printer::print() {
-    for ( unsigned int i = 0; i < 8 * Printer::voters; ++i ) {
-        if ( buffer[i] == NULL ) continue;
-        cout << buffer[i];
-    } // for
-    cout << endl;
-    flush();                                                            // Printing done, flush the buffer
-} // Printer::print
-
-
-/*********** isExist ***********
-    Purpose: Checks if buffer exists in the i-th voter.
-
-
-    Returns: None.
-
-
-    Errors: If buffer is empty, could cause index out of bounds.
-************************************/
-
-bool Printer::isExist( unsigned int id ) {
-    return buffer[ 8 * id ] != '\t';
-} // Printer::isExist
-
 void Printer::print( unsigned int id, Voter::States state ) {
-    if ( isExist( id ) ) {
-        print();
-    } // if
-    unsigned int i = 8 * id;
-    buffer[i++] = state;
-    buffer[i++] = '\t';
+    if (buffer[id] != nullptr) {
+        flush();
+    }
+    buffer[id] = new State(id, state);
 } // Printer::print
 
 void Printer::print( unsigned int id, Voter::States state, TallyVotes::Tour tour ) {
-    if ( isExist( id ) ) {
-        print();
-    } // if
-    unsigned int i = 8 * id;
-    buffer[i++] = state;
-    buffer[i++] = ' ';
-    buffer[i++] = tour;
-    buffer[i++] = '\t';
+    if (buffer[id] != nullptr) {
+        flush();
+    }
+    buffer[id] = new State(id, state, tour);
 } // Printer::print
 
 void Printer::print( unsigned int id, Voter::States state, TallyVotes::Ballot ballot ) {
-    if ( isExist( id ) ) {
-        print();
-    } // if
-    unsigned int i = 8 * id;
-    buffer[i++] = state;
-    buffer[i++] = ' ';
-    buffer[i++] = ballot.picture + 48;
-    buffer[i++] = ',';
-    buffer[i++] = ballot.statue + 48;
-    buffer[i++] = ',';
-    buffer[i++] = ballot.giftshop + 48;
-    buffer[i++] = '\t';
+    if (buffer[id] != nullptr) {
+        flush();
+    }
+    buffer[id] = new State(id, state, ballot);
 } // Printer::print
 
 void Printer::print( unsigned int id, Voter::States state, unsigned int numBlocked ) {
-    if ( isExist( id ) ) {
-        print();
-    } // if
-    unsigned int i = 8 * id;
-    buffer[i++] = state;
-    buffer[i++] = ' ';
-    string tmp = to_string( numBlocked );
-    for ( ;; ) {
-        char c = tmp[0];
-        if ( tmp.empty() ) {
-            break;
-        } // if
-        buffer[i++] = c;
-        tmp = tmp.substr( 1 );
-    } // for
-    buffer[i++] = '\t';
+    if (buffer[id] != nullptr) {
+        flush();
+    }
+    buffer[id] = new State(id, state, numBlocked);
 } // Printer::print
