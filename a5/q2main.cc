@@ -1,8 +1,8 @@
 #include <iostream>
 #include "MPRNG.h"
-#include "q1voter.h"
-#include "q1printer.h"
-#include "q1tallyVotes.h"
+#include "q2voter.h"
+#include "q2printer.h"
+#include "q2tallyVotes.h"
 
 using namespace std;
 
