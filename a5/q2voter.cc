@@ -1,5 +1,5 @@
-#include "q1voter.h"
-#include "q1printer.h"
+#include "q2voter.h"
+#include "q2printer.h"
 
 using namespace std;
 
