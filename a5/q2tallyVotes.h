@@ -5,19 +5,18 @@ _Monitor Printer;
 
 #if defined( EXT )                           // external scheduling monitor solution
 _Monitor TallyVotes {
-
 #elif defined( INT )                         // internal scheduling monitor solution
 _Monitor TallyVotes {
-
+    uCondition groupComplete;
 #elif defined( INTB )                        // internal scheduling monitor solution with barging
 _Monitor TallyVotes {
-    
+    uCondition bench;                        // only one condition variable (you may change the variable name)
+    void wait();                             // barging version of wait
+    void signalAll();                        // unblock all waiting tasks
 #elif defined( AUTO )                        // automatic-signal monitor solution
 _Monitor TallyVotes {
-
 #elif defined( TASK )                        // internal/external scheduling task solution
 _Task TallyVotes {
-
 #else
     #error unsupported voter type
 #endif
@@ -29,19 +28,6 @@ _Task TallyVotes {
     Tour vote( unsigned int id, Ballot ballot );
     void done();
   private:
-#if defined( EXT )
-
-#elif defined( INT )
-
-#elif defined( INTB )
-    uCondition bench;                        // only one condition variable (you may change the variable name)
-    void wait();                             // barging version of wait
-    void signalAll();                        // unblock all waiting tasks
-#elif defined( AUTO )
-
-#elif defined( TASK )
-
-#endif
     // common declarations
     struct Ballot total = { 0, 0, 0 };
     unsigned int voters;
