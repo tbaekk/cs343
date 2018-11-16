@@ -1,8 +1,8 @@
-#ifndef __Q1VOTER_H__
-#define __Q1VOTER_H__
+#ifndef __Q2VOTER_H__
+#define __Q2VOTER_H__
 
 #include "MPRNG.h"
-#include "q1tallyVotes.h"
+#include "q2tallyVotes.h"
 
 _Monitor Printer;
 extern MPRNG mprng;
