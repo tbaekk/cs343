@@ -7,10 +7,12 @@ _Monitor Printer;
 _Monitor TallyVotes {
 #elif defined( INT )                         // internal scheduling monitor solution
 _Monitor TallyVotes {
-    uCondition groupComplete;
+    uCondition full;
 #elif defined( INTB )                        // internal scheduling monitor solution with barging
 _Monitor TallyVotes {
     uCondition bench;                        // only one condition variable (you may change the variable name)
+    unsigned int tickets;
+    unsigned int curTicket;
     void wait();                             // barging version of wait
     void signalAll();                        // unblock all waiting tasks
 #elif defined( AUTO )                        // automatic-signal monitor solution
@@ -40,6 +42,9 @@ _Task TallyVotes {
         total.picture  += ballot.picture;
         total.statue   += ballot.statue;
         total.giftshop += ballot.giftshop;
+    }
+    void resetVotes () {
+        total = { 0, 0, 0 };
     }
     Tour bestVote() {
         Tour state = Tour::Picture;
