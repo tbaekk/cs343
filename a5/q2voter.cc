@@ -17,7 +17,7 @@ void Voter::main() {
     yield( mprng( 19 ) );                                                   // Yield a random number of times
 
     try {
-        for (int i = 0; i < nvotes; i++) {
+        for (unsigned int i = 0; i < nvotes; i++) {
             printer.print( id, Voter::Start );                              // Print start message
             
             yield( mprng(4) );                                              // Yield a random number of times
