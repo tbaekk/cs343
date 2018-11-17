@@ -22,6 +22,9 @@ _Monitor TallyVotes {
     bool full;
 #elif defined( TASK )                        // internal/external scheduling task solution
 _Task TallyVotes {
+    uCondition bench;
+    bool failed;
+    void main();
 #else
     #error unsupported voter type
 #endif
@@ -35,11 +38,13 @@ _Task TallyVotes {
   private:
     // common declarations
     struct Ballot total = { 0, 0, 0 };
+    unsigned int id;
     unsigned int voters;
     unsigned int group;
     unsigned int numAvailVoters;
     unsigned int numWaitVoters;
     Printer &printer;
+    Ballot ballot;
     Tour tour;
     void countVotes ( Ballot ballot ) {
         total.picture  += ballot.picture;
