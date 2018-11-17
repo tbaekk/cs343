@@ -16,7 +16,10 @@ _Monitor TallyVotes {
     void wait();                             // barging version of wait
     void signalAll();                        // unblock all waiting tasks
 #elif defined( AUTO )                        // automatic-signal monitor solution
+#include "AutomaticSignal.h"
 _Monitor TallyVotes {
+    AUTOMATIC_SIGNAL;
+    bool full;
 #elif defined( TASK )                        // internal/external scheduling task solution
 _Task TallyVotes {
 #else
