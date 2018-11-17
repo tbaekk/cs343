@@ -16,11 +16,11 @@ void TallyVotes::wait() {
             } // _Accept
         } catch( uMutexFailure::RendezvousFailure & ) {}
     } // while
-}
+} // TallyVotes::wait
 
 void TallyVotes::signalAll() {               // also useful
     while ( ! bench.empty() ) bench.signal();// drain the condition
-}
+} // TallyVotes::signalAll
 
 TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
     if ( numAvailVoters < group ) {
@@ -57,7 +57,7 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
     if ( numWaitVoters == 0 ) {
         curTicket += group;
         signalAll();
-    }
+    } // if
 
     return tour;
 } // TallyVotes::vote
