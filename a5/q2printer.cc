@@ -4,43 +4,11 @@
 
 using namespace std;
 
-State::State( unsigned int id, Voter::States state ) : id(id), state(state) {}
-
-State::State( unsigned int id, Voter::States state, TallyVotes::Tour tour ) : 
-  id(id), state(state), tour(tour) {}
-
-State::State( unsigned int id, Voter::States state, TallyVotes::Ballot ballot ) :
-  id(id), state(state), ballot(ballot) {}
-
-State::State( unsigned int id, Voter::States state, unsigned int numBlocked ) 
-  : id(id), state(state), numBlocked(numBlocked) {}
-
-string State::format() {
-  switch (state) {
-    case Voter::States::Start:
-    case Voter::States::Barging:
-    case Voter::States::Complete:
-    case Voter::States::Terminated:
-      return string(1, state);
-    case Voter::States::Failed:
-      return string(1, state);
-    case Voter::States::Finished:
-      return string(1, state) + " " + string(1, tour);
-    case Voter::States::Vote:
-      return string(1, state) + " " + to_string(ballot.picture) + "," + to_string(ballot.statue) + "," + to_string(ballot.giftshop);
-    case Voter::States::Block:
-    case Voter::States::Unblock:
-      return string(1, state) + " " + to_string(numBlocked);
-    default:
-      throw; // invalid state
-  }
-}
-
 Printer::Printer( unsigned int voters ) : voters(voters) {
     Printer::voters = voters;
-    buffer = new State*[voters]; // 1 buffer slot for each voter
+    buffer = new State*[voters];                                    // 1 buffer slot for each voter
     for (unsigned int i = 0; i < voters; ++i) {
-        buffer[i] = nullptr; // initialize to nullptr
+        buffer[i] = nullptr;                                        // Init nullptr
     }
 
     // output header
@@ -63,9 +31,9 @@ Printer::~Printer() {
 #if defined ( OUTPUT )
     flush();
 #endif
-    for (unsigned int i = 0; i < voters; ++i) {
+    for ( unsigned int i = 0; i < voters; ++i ) {
         delete buffer[i];
-    }
+    } // for
     delete[] buffer;
 #if defined ( OUTPUT )
     cout << "*****************" << endl;
@@ -84,60 +52,84 @@ Printer::~Printer() {
     Errors: If buffer is empty, could cause index out of bounds.
 ************************************/
 
+string Printer::prettyPrint(State *s) {
+    Voter::States state       = s->getState();
+    TallyVotes::Tour tour     = s->getTour();
+    TallyVotes::Ballot ballot = s->getBallot();
+    unsigned int numBlocked   = s->getNumBlocked();
+    switch (state) {
+        case Voter::Start:
+        case Voter::Barging:
+        case Voter::Complete:
+        case Voter::Failed:
+        case Voter::Terminated:
+            return string(1, state);
+        case Voter::Finished:
+            return string(1, state) + " " + string(1, tour);
+        case Voter::Vote:
+            return string(1, state) + " " + to_string(ballot.picture) + "," + to_string(ballot.statue) + "," + to_string(ballot.giftshop);
+        case Voter::Block:
+        case Voter::Unblock:
+            return string(1, state) + " " + to_string(numBlocked);
+        default:
+            throw; // invalid state
+  }
+}
+
 void Printer::flush() {
-    // figure out index to stop printing at
     unsigned int highest;
-    for (unsigned int id = voters - 1; id >= 0; --id) {
-        if (buffer[id] != nullptr) {
-            highest = id;
+    for ( unsigned int i = voters - 1; i >= 0; --i ) {                  // Find index to stop printing
+        if (buffer[i] != nullptr) {
+            highest = i;
             break;
-        }
-    }
+        } // if
+    } // for
 
     if (buffer[0] != nullptr) {
-        cout << buffer[0]->format();
-        // clear buffer
+        string output = prettyPrint(buffer[0]);
+        cout << output;
+                                                                        // Clear buffer and set to nullptr
         delete buffer[0];
         buffer[0] = nullptr;
-    }
-    for (unsigned int id = 1; id <= highest; ++id) { // output contents of all buffer voters
-        if (buffer[id] != nullptr) {
-            cout << "\t" << buffer[id]->format();
+    } // if
 
-            // clear buffer
-            delete buffer[id];
-            buffer[id] = nullptr;
-        } else if (id != highest) {
+    for ( unsigned int i = 1; i <= highest; ++i ) {                     // Output all voters in the buffer
+        if (buffer[i] != nullptr) {
+            cout << "\t" << prettyPrint(buffer[i]);
+
+            delete buffer[i];                                           // Clear buffer and set to nullptr
+            buffer[i] = nullptr;
+        } else if (i != highest) {
             cout << "\t";
-        }
-    }
+        } // if
+    } // for
     cout << endl;
 } // Printer::flush
 
 void Printer::print( unsigned int id, Voter::States state ) {
     if (buffer[id] != nullptr) {
         flush();
-    }
-    buffer[id] = new State(id, state);
+    } // if
+    buffer[id] = new State(state);
 } // Printer::print
 
 void Printer::print( unsigned int id, Voter::States state, TallyVotes::Tour tour ) {
     if (buffer[id] != nullptr) {
         flush();
-    }
-    buffer[id] = new State(id, state, tour);
+    } // if
+    buffer[id] = new State(state, tour);
 } // Printer::print
 
 void Printer::print( unsigned int id, Voter::States state, TallyVotes::Ballot ballot ) {
     if (buffer[id] != nullptr) {
         flush();
-    }
-    buffer[id] = new State(id, state, ballot);
+    } // if
+    buffer[id] = new State(state, ballot);
 } // Printer::print
 
 void Printer::print( unsigned int id, Voter::States state, unsigned int numBlocked ) {
     if (buffer[id] != nullptr) {
         flush();
-    }
-    buffer[id] = new State(id, state, numBlocked);
+    } // if
+    buffer[id] = new State(state, numBlocked);
 } // Printer::print
