@@ -44,6 +44,7 @@ Printer::Printer( unsigned int voters ) : voters(voters) {
     }
 
     // output header
+#if defined ( OUTPUT )
     cout << "V0";
     for (unsigned int i = 1; i < voters; ++i) {
         cout << "\tV" << i;
@@ -55,16 +56,21 @@ Printer::Printer( unsigned int voters ) : voters(voters) {
         cout << "\t*******";
     }
     cout << endl;
+#endif
 } // Printer::Printer
 
 Printer::~Printer() {
+#if defined ( OUTPUT )
     flush();
+#endif
     for (unsigned int i = 0; i < voters; ++i) {
         delete buffer[i];
     }
     delete[] buffer;
+#if defined ( OUTPUT )
     cout << "*****************" << endl;
     cout << "All tours started" << endl;
+#endif
 } // Printer::~Printer
 
 

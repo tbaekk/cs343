@@ -18,21 +18,26 @@ void Voter::main() {
 
     try {
         for (unsigned int i = 0; i < nvotes; i++) {
+#if defined ( OUTPUT )
             printer.print( id, Voter::Start );                              // Print start message
-            
+#endif
             yield( mprng(4) );                                              // Yield a random number of times
 
             TallyVotes::Ballot ballot = Voter::cast();
             TallyVotes::Tour tour = voteTallier.vote( id, ballot );         // Vote
 
             yield( mprng(4) );                                              // Yield a random number of times
-
+#if defined ( OUTPUT )
             printer.print( id, Voter::Finished, tour );                     // Print finish message
+#endif
         }
         voteTallier.done();
-
+#if defined ( OUTPUT )
         printer.print( id, Voter::Terminated );
+#endif
     } catch ( TallyVotes::Failed ) {
+#if defined ( OUTPUT )        
         printer.print( id, Voter::Failed );
+#endif
     }
 } // Voter::main

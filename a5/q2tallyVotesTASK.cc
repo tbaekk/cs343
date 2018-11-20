@@ -14,18 +14,24 @@ void TallyVotes::main() {
                 break;
             } or _Accept( vote ) {
                 countVotes( ballot );
+            #if defined ( OUTPUT )
                 printer.print( id, Voter::Vote, ballot );
 
                 printer.print( id, Voter::Block, numWaitVoters + 1 );
+            #endif
                 numWaitVoters++;
 
                 if ( numWaitVoters >= group ) {                                     // Check if this voter is the last one to form a group
+                #if defined ( OUTPUT )
                     printer.print( id, Voter::Complete );                           // If yes, print the complete message
+                #endif
                     tour = bestVote();
                     resetVotes();                                                   // Reset voting result for the next group, if this voter is the last one in a group
 
                     while ( !bench.empty() ) {
+                    #if defined ( OUTPUT )
                         printer.print( bench.front(), Voter::Unblock, numWaitVoters - 1 );
+                    #endif
                         numWaitVoters--;
                         bench.signalBlock();
                     } // while

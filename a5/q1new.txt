@@ -1,0 +1,4 @@
+There is a livelock among the Angels at the climax. It is a livelock situation
+because the Angels looked at one another which caused none progressing and being
+stuck forever. This is similar to a livelock since they were starving the resource
+(humans) and got stuck by looking at one another.

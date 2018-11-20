@@ -1,0 +1,31 @@
+b)
+    i)
+    External Scheduling
+        - 1.98u 0.03s 0:02.03r 30612kb ( 1 processor )
+        - 1.82u 0.04s 0:01.88r 30608kb ( 2 processors )
+    Internal Scheduling
+        - 1.90u 0.06s 0:02.00r 30612kb ( 1 processor )
+        - 1.87u 0.06s 0:01.93r 30608kb ( 2 processors )
+    Java Monitor Simulation
+        - 4.92u 0.04s 0:05.05r 30696kb ( 1 processor )
+        - 5.28u 0.03s 0:05.31r 30692kb ( 2 processors )
+    Automatic Signal Simulation
+        - 2.04u 0.06s 0:02.13r 30616kb ( 1 processor )
+        - 1.81u 0.06s 0:01.89r 30616kb ( 2 processors )
+    Server Task Scheduling
+        - 2.03u 0.06s 0:02.25r 30612kb ( 1 processor )
+        - 1.96u 0.06s 0:02.08r 30612kb ( 2 processors )
+
+    ii)
+    In overall, we can see that Java Monitor simulation solution performed the
+    slowest, and also this method performed slower with 2 processors while other methods 
+    performed faster with extra a processor:
+        - External Scheduling increased by 0.15r
+        - Internal Scheduling increased by 0.07r
+        - Java Monitor Simulation decreased by 0.26r
+        - Automatic Signal Simulation increased by 0.24r
+        - Server Task Scheduling increased by 0.17r
+    Java Monitor Simulation performed the slowest due to the single condition queue which
+    allowed barging from tasks. Thus, to prevent this issue, it was wasted by waiting
+    in the while loop, which is inefficient.
+    
